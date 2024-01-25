@@ -1,6 +1,9 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "OB_Character.h"
+
+#include <OutBanks/OB_Components/OB_AmmoComp.h>
+
 #include "Animation/AnimInstance.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -30,6 +33,9 @@ AOB_Character::AOB_Character()
 	TempMesh->bCastDynamicShadow = false;
 	TempMesh->CastShadow = false;
 	TempMesh->SetRelativeLocation(FVector(-30.f, 0.f, -150.f));
+
+	AmmoComp = CreateDefaultSubobject<UOB_AmmoComp>("AmmoComp");
+	AddOwnedComponent(AmmoComp);
 }
 
 void AOB_Character::BeginPlay()

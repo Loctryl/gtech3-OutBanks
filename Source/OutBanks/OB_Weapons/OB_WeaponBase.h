@@ -27,6 +27,9 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UPROPERTY(EditAnywhere)
+	FName WeaponName;
+
 	UPROPERTY(VisibleAnywhere)
 	USkeletalMeshComponent* SkeletalMeshComp;
 
@@ -73,6 +76,9 @@ protected:
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	UFUNCTION()
+	FName GetWeaponName() const { return WeaponName; }
 
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
 	void OnTrigger(UPrimitiveComponent* OverlappedComponent,
