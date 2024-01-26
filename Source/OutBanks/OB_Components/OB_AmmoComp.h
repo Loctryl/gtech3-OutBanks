@@ -38,5 +38,11 @@ public:
 								FActorComponentTickFunction* ThisTickFunction) override;
 
 	UFUNCTION(BlueprintCallable)
+	void SetMaxAmmoInClip(int32 MaxAmmo) { MaxAmmoInClip = MaxAmmo; }
+	
+	UFUNCTION(BlueprintCallable)
 	void Reload();
+
+	UFUNCTION(BlueprintCallable)
+	bool ShootOneAmmo();
 };

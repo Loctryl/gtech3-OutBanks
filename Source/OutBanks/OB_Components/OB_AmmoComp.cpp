@@ -36,14 +36,23 @@ void UOB_AmmoComp::Reload()
 	
 	const int32 Diff = MaxAmmoInClip - CurrentAmmoInClip;
 	
-	if(CurrentAmmoInReserve < Diff)
+	if(CurrentAmmoInReserve > Diff)
+	{
+		CurrentAmmoInClip += Diff;
+		CurrentAmmoInReserve -= Diff;
+	}
+	else
 	{
 		CurrentAmmoInClip += CurrentAmmoInReserve;
 		CurrentAmmoInReserve = 0;
-	} else
-	{
-		CurrentAmmoInClip += Diff;
-		CurrentAmmoInClip -= Diff;
 	}
+}
+
+bool UOB_AmmoComp::ShootOneAmmo()
+{
+	if(CurrentAmmoInClip == 0) return false;
+
+	CurrentAmmoInClip--;
+	return true;
 }
 

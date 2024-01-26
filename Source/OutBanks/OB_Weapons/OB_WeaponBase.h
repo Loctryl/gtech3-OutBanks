@@ -27,7 +27,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FName WeaponName;
 
 	UPROPERTY(VisibleAnywhere)
@@ -53,12 +53,18 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	UInputAction* FireAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
+	UInputAction* ReloadAction;
+
 	
 	UPROPERTY()
 	AOB_Character* Character;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	FVector FireSpawnOffset;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	int32 MaxAmmoInClip;
 
 	
 	UFUNCTION(BlueprintCallable, Category="Weapon")
@@ -79,6 +85,9 @@ public:
 
 	UFUNCTION()
 	FName GetWeaponName() const { return WeaponName; }
+
+	UFUNCTION()
+	int32 GetWeaponClipSize() const { return MaxAmmoInClip; }
 
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
 	void OnTrigger(UPrimitiveComponent* OverlappedComponent,

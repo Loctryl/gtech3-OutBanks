@@ -5,6 +5,7 @@
 #include <Kismet/GameplayStatics.h>
 #include <OutBanks/OB_Weapons/OB_Projectile.h>
 #include "OutBanks/OB_Character/OB_Character.h"
+#include "OutBanks/OB_Components/OB_AmmoComp.h"
 
 
 AOB_WeaponBase::AOB_WeaponBase()
@@ -51,6 +52,9 @@ void AOB_WeaponBase::AttachWeapon(AOB_Character* TargetCharacter)
 	
 	// switch bHasRifle so the animation blueprint can switch to another animation set
 	Character->SetHasRifle(true);
+	Character->SetWeapon(this);
+
+	Character->GetAmmoComponent()->SetMaxAmmoInClip(MaxAmmoInClip);
 
 	// Set up action bindings
 	if (APlayerController* PlayerController = Cast<APlayerController>(Character->GetController()))
@@ -65,8 +69,10 @@ void AOB_WeaponBase::AttachWeapon(AOB_Character* TargetCharacter)
 		{
 			// Fire
 			EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Triggered, this, &AOB_WeaponBase::Fire);
+			EnhancedInputComponent->BindAction(ReloadAction, ETriggerEvent::Triggered, Character->GetAmmoComponent(), &UOB_AmmoComp::Reload);
 		}
 	}
+	Character->PickUpWeapon();
 }
 
 void AOB_WeaponBase::Fire()
@@ -80,7 +86,7 @@ void AOB_WeaponBase::Fire()
 	if (ProjectileClass != nullptr)
 	{
 		UWorld* const World = GetWorld();
-		if (World != nullptr)
+		if (World != nullptr && Character->GetAmmoComponent()->ShootOneAmmo())
 		{
 			APlayerController* PlayerController = Cast<APlayerController>(Character->GetController());
 			const FRotator SpawnRotation = PlayerController->PlayerCameraManager->GetCameraRotation();
@@ -98,6 +104,7 @@ void AOB_WeaponBase::Fire()
 		}
 	}
 }
+
 
 void AOB_WeaponBase::PlayAnimationAndSound()
 {

@@ -7,6 +7,7 @@
 #include "Logging/LogMacros.h"
 #include "OB_Character.generated.h"
 
+class AOB_WeaponBase;
 class UInputComponent;
 class USkeletalMeshComponent;
 class UCameraComponent;
@@ -26,8 +27,11 @@ class AOB_Character : public ACharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FirstPersonCameraComponent;
 
-	UPROPERTY(Instanced, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	UOB_AmmoComp* AmmoComp; 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Component, meta = (AllowPrivateAccess = "true"))
+	UOB_AmmoComp* AmmoComp;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Weapon, meta = (AllowPrivateAccess = "true"))
+	AOB_WeaponBase* WeaponHandle;
 
 protected:
 	virtual void BeginPlay();
@@ -49,4 +53,14 @@ public:
 	
 	/** Returns FirstPersonCameraComponent subobject **/
 	UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
+
+	UOB_AmmoComp* GetAmmoComponent() const { return AmmoComp; }
+
+	UFUNCTION(BlueprintCallable)
+	AOB_WeaponBase* GetWeapon() const { return WeaponHandle; }
+
+	void SetWeapon(AOB_WeaponBase* NewWeapon) { WeaponHandle = NewWeapon; }
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void PickUpWeapon();
 };
