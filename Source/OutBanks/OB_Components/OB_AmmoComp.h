@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include <Components/ActorComponent.h>
+#include "Components/ActorComponent.h"
 #include "OB_AmmoComp.generated.h"
 
 
@@ -11,6 +11,9 @@ UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class OUTBANKS_API UOB_AmmoComp : public UActorComponent
 {
 	GENERATED_BODY()
+
+	UPROPERTY()
+	class AOB_Character* CharacterRef;
 
 public:
 	// Sets default values for this component's properties
@@ -34,11 +37,13 @@ protected:
 
 public:
 	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
+	virtual void TickComponent(float DeltaTime,
+								ELevelTick TickType,
 								FActorComponentTickFunction* ThisTickFunction) override;
-
-	UFUNCTION(BlueprintCallable)
+	
 	void SetMaxAmmoInClip(int32 MaxAmmo) { MaxAmmoInClip = MaxAmmo; }
+
+	void SetCharacterRef(AOB_Character* NewRef) { CharacterRef = NewRef; }
 	
 	UFUNCTION(BlueprintCallable)
 	void Reload();

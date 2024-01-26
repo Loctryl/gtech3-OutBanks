@@ -2,7 +2,10 @@
 
 #include "OB_Character.h"
 
-#include <OutBanks/OB_Components/OB_AmmoComp.h>
+#include <OutBanks/OB_Character/OB_PlayerController.h>
+#include <OutBanks/OB_Weapons/OB_WeaponBase.h>
+
+#include "OutBanks/OB_Components/OB_AmmoComp.h"
 
 #include "Animation/AnimInstance.h"
 #include "Camera/CameraComponent.h"
@@ -15,43 +18,46 @@ DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
 AOB_Character::AOB_Character()
 {
-	// Character doesnt have a rifle at start
 	bHasRifle = false;
 	
-	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(55.f, 96.0f);
 		
-	// Create a CameraComponent	
-	FirstPersonCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
-	FirstPersonCameraComponent->SetupAttachment(GetCapsuleComponent());
-	FirstPersonCameraComponent->SetRelativeLocation(FVector(-10.f, 0.f, 60.f)); // Position the camera
-	FirstPersonCameraComponent->bUsePawnControlRotation = true;
+	FPCameraComp = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
+	FPCameraComp->SetupAttachment(GetCapsuleComponent());
+	FPCameraComp->SetRelativeLocation(FVector(-10.f, 0.f, 60.f)); // Position the camera
+	FPCameraComp->bUsePawnControlRotation = true;
 
-	USkeletalMeshComponent* TempMesh = GetMesh();
-	TempMesh->SetupAttachment(FirstPersonCameraComponent);
-	TempMesh->SetOnlyOwnerSee(true);
-	TempMesh->bCastDynamicShadow = false;
-	TempMesh->CastShadow = false;
-	TempMesh->SetRelativeLocation(FVector(-30.f, 0.f, -150.f));
+	USkeletalMeshComponent* MeshSet = GetMesh();
+	MeshSet->SetupAttachment(FPCameraComp);
+	MeshSet->SetOnlyOwnerSee(true);
+	MeshSet->bCastDynamicShadow = false;
+	MeshSet->CastShadow = false;
+	MeshSet->SetRelativeLocation(FVector(-30.f, 0.f, -150.f));
 
 	AmmoComp = CreateDefaultSubobject<UOB_AmmoComp>("AmmoComp");
 	AddOwnedComponent(AmmoComp);
+	AmmoComp->SetCharacterRef(this);
 }
 
 void AOB_Character::BeginPlay()
 {
-	// Call the base class  
 	Super::BeginPlay();
 
 }
 
-
-void AOB_Character::SetHasRifle(bool bNewHasRifle)
+void AOB_Character::PickUpWeapon(AOB_WeaponBase* WeaponPickUp)
 {
-	bHasRifle = bNewHasRifle;
-}
+	if(bHasRifle) return;
+	
+	FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, true);
+	WeaponPickUp->AttachToComponent(GetMesh(), AttachmentRules, FName(TEXT("GripPoint")));
+	
+	SetHasRifle(true);
+	SetWeapon(WeaponPickUp);
 
-bool AOB_Character::GetHasRifle()
-{
-	return bHasRifle;
+	GetAmmoComponent()->SetMaxAmmoInClip(WeaponPickUp->GetWeaponClipSize());
+
+	Cast<AOB_PlayerController>(Controller)->SetUpWeaponInputs();
+
+	OnPickUpWeaponUpdateHUDWidget();
 }

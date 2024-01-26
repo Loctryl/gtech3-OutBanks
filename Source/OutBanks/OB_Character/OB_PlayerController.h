@@ -31,10 +31,14 @@ protected:
 	UInputAction* JumpAction;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input", meta=(AllowPrivateAccess = "true"))
+	UInputAction* LookAction;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input", meta=(AllowPrivateAccess = "true"))
 	UInputAction* ShootAction;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input", meta=(AllowPrivateAccess = "true"))
-	UInputAction* LookAction;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
+	UInputAction* ReloadAction;
+
 
 	UPROPERTY(VisibleAnywhere)
 	AOB_Character* CharacterRef;
@@ -69,4 +73,6 @@ protected:
 	
 	void StopJump(const FInputActionValue& Value);
 	// End Actor interface
+public:
+	void SetUpWeaponInputs();
 };

@@ -3,6 +3,9 @@
 #include "OB_PlayerController.h"
 #include <EnhancedInputComponent.h>
 #include <Kismet/GameplayStatics.h>
+#include <OutBanks/OB_Components/OB_AmmoComp.h>
+#include <OutBanks/OB_Weapons/OB_WeaponBase.h>
+
 #include "EnhancedInputSubsystems.h"
 #include "OB_Character.h"
 
@@ -40,9 +43,17 @@ void AOB_PlayerController::SetupInputComponent()
 
 		// Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AOB_PlayerController::Look);
+	}
+}
 
-		// Looking
-		EnhancedInputComponent->BindAction(ShootAction, ETriggerEvent::Started, this, &AOB_PlayerController::Look);
+void AOB_PlayerController::SetUpWeaponInputs()
+{
+	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(InputComponent))
+	{
+		// Fire
+		EnhancedInputComponent->BindAction(ShootAction, ETriggerEvent::Triggered, CharacterRef->GetWeapon(), &AOB_WeaponBase::Fire);
+		// Reload
+		EnhancedInputComponent->BindAction(ReloadAction, ETriggerEvent::Triggered, CharacterRef->GetAmmoComponent(), &UOB_AmmoComp::Reload);
 	}
 }
 

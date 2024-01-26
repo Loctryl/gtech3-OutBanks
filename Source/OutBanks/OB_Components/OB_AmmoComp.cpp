@@ -1,20 +1,13 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
-
+﻿#include <OutBanks/OB_Character/OB_Character.h>
 #include <OutBanks/OB_Components/OB_AmmoComp.h>
 
 
-// Sets default values for this component's properties
 UOB_AmmoComp::UOB_AmmoComp()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 	
 }
 
-
-// Called when the game starts
 void UOB_AmmoComp::BeginPlay()
 {
 	Super::BeginPlay();
@@ -46,6 +39,7 @@ void UOB_AmmoComp::Reload()
 		CurrentAmmoInClip += CurrentAmmoInReserve;
 		CurrentAmmoInReserve = 0;
 	}
+	CharacterRef->UpdateHUDWidget();
 }
 
 bool UOB_AmmoComp::ShootOneAmmo()

@@ -1,5 +1,3 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -7,14 +5,6 @@
 #include "Logging/LogMacros.h"
 #include "OB_Character.generated.h"
 
-class AOB_WeaponBase;
-class UInputComponent;
-class USkeletalMeshComponent;
-class UCameraComponent;
-class UInputAction;
-class UInputMappingContext;
-class UOB_AmmoComp;
-struct FInputActionValue;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
@@ -23,44 +13,42 @@ class AOB_Character : public ACharacter
 {
 	GENERATED_BODY()
 	
-	/** First person camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	UCameraComponent* FirstPersonCameraComponent;
+	class UCameraComponent* FPCameraComp;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Component, meta = (AllowPrivateAccess = "true"))
-	UOB_AmmoComp* AmmoComp;
+	class UOB_AmmoComp* AmmoComp;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Weapon, meta = (AllowPrivateAccess = "true"))
-	AOB_WeaponBase* WeaponHandle;
+	class AOB_WeaponBase* WeaponHandle;
 
 protected:
-	virtual void BeginPlay();
+	virtual void BeginPlay() override;
 
 public:
 	AOB_Character();
 	
-	/** Bool for AnimBP to switch to another animation set */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Weapon)
 	bool bHasRifle;
 	
-	/** Setter to set the bool */
 	UFUNCTION(BlueprintCallable, Category = Weapon)
-	void SetHasRifle(bool bNewHasRifle);
-
-	/** Getter for the bool */
+	void SetHasRifle(const bool NewHasRifle) { bHasRifle = NewHasRifle; }
 	UFUNCTION(BlueprintCallable, Category = Weapon)
-	bool GetHasRifle();
+	bool GetHasRifle() const { return bHasRifle; }
 	
-	/** Returns FirstPersonCameraComponent subobject **/
-	UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
+	UCameraComponent* GetFirstPersonCameraComponent() const { return FPCameraComp; }
 
 	UOB_AmmoComp* GetAmmoComponent() const { return AmmoComp; }
-
-	UFUNCTION(BlueprintCallable)
+	
 	AOB_WeaponBase* GetWeapon() const { return WeaponHandle; }
-
 	void SetWeapon(AOB_WeaponBase* NewWeapon) { WeaponHandle = NewWeapon; }
 
+	UFUNCTION()
+	void PickUpWeapon(AOB_WeaponBase* WeaponPickUp);
+
 	UFUNCTION(BlueprintImplementableEvent)
-	void PickUpWeapon();
+	void OnPickUpWeaponUpdateHUDWidget();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void UpdateHUDWidget();
 };

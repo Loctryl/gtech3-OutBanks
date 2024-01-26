@@ -7,8 +7,6 @@
 #include "OB_WeaponBase.generated.h"
 
 
-class UBoxComponent;
-class USphereComponent;
 class UInputAction;
 class UInputMappingContext;
 class AOB_Character;
@@ -20,11 +18,9 @@ class OUTBANKS_API AOB_WeaponBase : public AActor
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this actor's properties
 	AOB_WeaponBase();
 
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
@@ -34,12 +30,11 @@ protected:
 	USkeletalMeshComponent* SkeletalMeshComp;
 
 	UPROPERTY(VisibleAnywhere);
-	UBoxComponent* BoxComp;
+	class UBoxComponent* BoxComp;
 
 	
 	UPROPERTY(EditDefaultsOnly, Category=Shoot)
 	TSubclassOf<class AOB_Projectile> ProjectileClass;
-
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Shoot)
 	USoundBase* FireSound;
@@ -47,31 +42,17 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Shoot)
 	UAnimMontage* FireAnimation;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
-	UInputMappingContext* FireMappingContext;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
-	UInputAction* FireAction;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
-	UInputAction* ReloadAction;
-
 	
 	UPROPERTY()
-	AOB_Character* Character;
+	AOB_Character* CharacterRef;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	FVector FireSpawnOffset;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	int32 MaxAmmoInClip;
-
 	
-	UFUNCTION(BlueprintCallable, Category="Weapon")
-	void AttachWeapon(AOB_Character* TargetCharacter);
 	
-	UFUNCTION(BlueprintCallable, Category="Weapon")
-	void Fire();
 
 	UFUNCTION(BlueprintCallable, Category="Weapon")
 	void PlayAnimationAndSound();
@@ -80,8 +61,10 @@ protected:
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 public:
-	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	UFUNCTION(BlueprintCallable, Category="Weapon")
+	void Fire();
 
 	UFUNCTION()
 	FName GetWeaponName() const { return WeaponName; }
