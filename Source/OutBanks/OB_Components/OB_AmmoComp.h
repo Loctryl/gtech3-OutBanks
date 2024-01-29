@@ -6,14 +6,13 @@
 #include "Components/ActorComponent.h"
 #include "OB_AmmoComp.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FUpdateAmmo);
+
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class OUTBANKS_API UOB_AmmoComp : public UActorComponent
 {
 	GENERATED_BODY()
-
-	UPROPERTY()
-	class AOB_Character* CharacterRef;
 
 public:
 	// Sets default values for this component's properties
@@ -42,12 +41,12 @@ public:
 								FActorComponentTickFunction* ThisTickFunction) override;
 	
 	void SetMaxAmmoInClip(int32 MaxAmmo) { MaxAmmoInClip = MaxAmmo; }
-
-	void SetCharacterRef(AOB_Character* NewRef) { CharacterRef = NewRef; }
 	
 	UFUNCTION(BlueprintCallable)
 	void Reload();
 
 	UFUNCTION(BlueprintCallable)
 	bool ShootOneAmmo();
+
+	FUpdateAmmo UpdateAmmo;
 };

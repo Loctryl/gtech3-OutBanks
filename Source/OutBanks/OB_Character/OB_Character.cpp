@@ -35,8 +35,8 @@ AOB_Character::AOB_Character()
 	MeshSet->SetRelativeLocation(FVector(-30.f, 0.f, -150.f));
 
 	AmmoComp = CreateDefaultSubobject<UOB_AmmoComp>("AmmoComp");
+	AmmoComp->UpdateAmmo.AddDynamic(this, &AOB_Character::UpdateHUDWidget);
 	AddOwnedComponent(AmmoComp);
-	AmmoComp->SetCharacterRef(this);
 }
 
 void AOB_Character::BeginPlay()
@@ -60,4 +60,5 @@ void AOB_Character::PickUpWeapon(AOB_WeaponBase* WeaponPickUp)
 	Cast<AOB_PlayerController>(Controller)->SetUpWeaponInputs();
 
 	OnPickUpWeaponUpdateHUDWidget();
+	UpdateHUDWidget();
 }

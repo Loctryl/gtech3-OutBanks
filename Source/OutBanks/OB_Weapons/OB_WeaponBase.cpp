@@ -55,8 +55,6 @@ void AOB_WeaponBase::Fire()
 			World->SpawnActor<AOB_Projectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
 
 			PlayAnimationAndSound();
-			
-			CharacterRef->UpdateHUDWidget();
 		}
 	}
 }

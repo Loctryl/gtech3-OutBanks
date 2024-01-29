@@ -1,5 +1,4 @@
-﻿#include <OutBanks/OB_Character/OB_Character.h>
-#include <OutBanks/OB_Components/OB_AmmoComp.h>
+﻿#include <OutBanks/OB_Components/OB_AmmoComp.h>
 
 
 UOB_AmmoComp::UOB_AmmoComp()
@@ -39,7 +38,7 @@ void UOB_AmmoComp::Reload()
 		CurrentAmmoInClip += CurrentAmmoInReserve;
 		CurrentAmmoInReserve = 0;
 	}
-	CharacterRef->UpdateHUDWidget();
+	UpdateAmmo.Broadcast();
 }
 
 bool UOB_AmmoComp::ShootOneAmmo()
@@ -47,6 +46,8 @@ bool UOB_AmmoComp::ShootOneAmmo()
 	if(CurrentAmmoInClip == 0) return false;
 
 	CurrentAmmoInClip--;
+
+	UpdateAmmo.Broadcast();
 	return true;
 }
 
