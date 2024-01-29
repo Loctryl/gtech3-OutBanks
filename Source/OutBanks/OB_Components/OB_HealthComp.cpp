@@ -24,7 +24,7 @@ void UOB_HealthComp::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 
 void UOB_HealthComp::ApplyDamage(int32 Amount)
 {
-	if(Amount > CurrentHealth)
+	if(Amount >= CurrentHealth)
 	{
 		CurrentHealth = 0;
 		DeathEvent.Broadcast();
