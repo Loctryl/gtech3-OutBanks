@@ -5,6 +5,7 @@
 #include "Logging/LogMacros.h"
 #include "OB_Character.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FPlayerDeath);
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
@@ -18,6 +19,9 @@ class AOB_Character : public ACharacter
 
 	UPROPERTY(Instanced, EditAnywhere, BlueprintReadOnly, Category = Component, meta = (AllowPrivateAccess = "true"))
 	class UOB_AmmoComp* AmmoComp;
+	
+	UPROPERTY(Instanced, EditAnywhere, BlueprintReadOnly, Category = Component, meta = (AllowPrivateAccess = "true"))
+	class UOB_HealthComp* HealthComp;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Weapon, meta = (AllowPrivateAccess = "true"))
 	class AOB_WeaponBase* WeaponHandle;
@@ -25,11 +29,26 @@ class AOB_Character : public ACharacter
 protected:
 	virtual void BeginPlay() override;
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnPickUpWeaponUpdateHUD();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void UpdateAmmoHUD();
+
+	UFUNCTION()
+	void OnDeath();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void UpdateHealthHUD();
+
 public:
 	AOB_Character();
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Weapon)
 	bool bHasRifle;
+
+	UPROPERTY(VisibleAnywhere, BlueprintAssignable)
+	FPlayerDeath OnPlayerDeath;
 	
 	UFUNCTION(BlueprintCallable, Category = Weapon)
 	void SetHasRifle(const bool NewHasRifle) { bHasRifle = NewHasRifle; }
@@ -45,10 +64,4 @@ public:
 
 	UFUNCTION()
 	void PickUpWeapon(AOB_WeaponBase* WeaponPickUp);
-
-	UFUNCTION(BlueprintImplementableEvent)
-	void OnPickUpWeaponUpdateHUDWidget();
-
-	UFUNCTION(BlueprintImplementableEvent)
-	void UpdateHUDWidget();
 };

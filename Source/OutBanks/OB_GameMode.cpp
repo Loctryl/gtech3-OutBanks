@@ -1,4 +1,3 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "OB_GameMode.h"
 #include "OutBanks/OB_Character/OB_Character.h"
@@ -7,8 +6,7 @@
 AOB_GameMode::AOB_GameMode()
 	: Super()
 {
-	// set default pawn class to our Blueprinted character
-	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnClassFinder(TEXT("/Game/FirstPerson/Blueprints/BP_FirstPersonCharacter"));
+	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnClassFinder(TEXT("/Game/OutBanks/Blueprints/OBP_Character"));
 	DefaultPawnClass = PlayerPawnClassFinder.Class;
-
+	
 }

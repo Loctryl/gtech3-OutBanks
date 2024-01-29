@@ -3,6 +3,7 @@
 #include "OB_Character.h"
 
 #include <OutBanks/OB_Character/OB_PlayerController.h>
+#include <OutBanks/OB_Components/OB_HealthComp.h>
 #include <OutBanks/OB_Weapons/OB_WeaponBase.h>
 
 #include "OutBanks/OB_Components/OB_AmmoComp.h"
@@ -35,8 +36,13 @@ AOB_Character::AOB_Character()
 	MeshSet->SetRelativeLocation(FVector(-30.f, 0.f, -150.f));
 
 	AmmoComp = CreateDefaultSubobject<UOB_AmmoComp>("AmmoComp");
-	AmmoComp->UpdateAmmo.AddDynamic(this, &AOB_Character::UpdateHUDWidget);
+	AmmoComp->UpdateAmmo.AddDynamic(this, &AOB_Character::UpdateAmmoHUD);
 	AddOwnedComponent(AmmoComp);
+
+	HealthComp = CreateDefaultSubobject<UOB_HealthComp>("HealthComp");
+	HealthComp->UpdateHealthEvent.AddDynamic(this, &AOB_Character::UpdateHealthHUD);
+	HealthComp->DeathEvent.AddDynamic(this, &AOB_Character::OnDeath);
+	AddOwnedComponent(HealthComp);
 }
 
 void AOB_Character::BeginPlay()
@@ -59,6 +65,13 @@ void AOB_Character::PickUpWeapon(AOB_WeaponBase* WeaponPickUp)
 
 	Cast<AOB_PlayerController>(Controller)->SetUpWeaponInputs();
 
-	OnPickUpWeaponUpdateHUDWidget();
-	UpdateHUDWidget();
+	OnPickUpWeaponUpdateHUD();
+	UpdateAmmoHUD();
+}
+
+void AOB_Character::OnDeath()
+{
+	DetachFromControllerPendingDestroy();
+	
+	OnPlayerDeath.Broadcast();
 }

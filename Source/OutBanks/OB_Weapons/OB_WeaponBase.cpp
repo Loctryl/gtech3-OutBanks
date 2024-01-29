@@ -26,6 +26,7 @@ void AOB_WeaponBase::BeginPlay()
 	Super::BeginPlay();
 
 	BoxComp->OnComponentBeginOverlap.AddDynamic(this, &AOB_WeaponBase::OnTrigger);
+
 }
 
 void AOB_WeaponBase::Tick(float DeltaTime) { Super::Tick(DeltaTime); }
@@ -34,7 +35,10 @@ void AOB_WeaponBase::OnTrigger(UPrimitiveComponent* OverlappedComponent, AActor*
 {
 	CharacterRef = Cast<AOB_Character>(OtherActor);
 	if(CharacterRef != nullptr)
+	{
 		CharacterRef->PickUpWeapon(this);
+		BoxComp->OnComponentBeginOverlap.RemoveDynamic(this, &AOB_WeaponBase::OnTrigger);
+	}
 }
 
 
