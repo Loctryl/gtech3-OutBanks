@@ -1,5 +1,6 @@
 #include "OB_Projectile.h"
 
+#include <Components/CapsuleComponent.h>
 #include <OutBanks/Enemies/OB_EnemyBase.h>
 #include <OutBanks/OB_Components/OB_HealthComp.h>
 
@@ -30,11 +31,13 @@ AOB_Projectile::AOB_Projectile()
 
 void AOB_Projectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	if ((OtherActor != nullptr) && (OtherActor != this))
+	if ((OtherActor != nullptr) && (OtherActor != this) && Cast<UCapsuleComponent>(OtherComp))
 	{
 		AOB_EnemyBase* Enemy = Cast<AOB_EnemyBase>(OtherActor);
+		
 		if(Enemy)
 			Enemy->GetHealthComp()->ApplyDamage(10);
+		
 		Destroy();
 	}
 }

@@ -26,7 +26,6 @@ void AOB_WeaponBase::BeginPlay()
 	Super::BeginPlay();
 
 	BoxComp->OnComponentBeginOverlap.AddDynamic(this, &AOB_WeaponBase::OnTrigger);
-
 }
 
 void AOB_WeaponBase::Tick(float DeltaTime) { Super::Tick(DeltaTime); }

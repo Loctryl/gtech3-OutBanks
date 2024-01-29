@@ -36,12 +36,9 @@ AOB_Character::AOB_Character()
 	MeshSet->SetRelativeLocation(FVector(-30.f, 0.f, -150.f));
 
 	AmmoComp = CreateDefaultSubobject<UOB_AmmoComp>("AmmoComp");
-	AmmoComp->UpdateAmmo.AddDynamic(this, &AOB_Character::UpdateAmmoHUD);
 	AddOwnedComponent(AmmoComp);
 
 	HealthComp = CreateDefaultSubobject<UOB_HealthComp>("HealthComp");
-	HealthComp->UpdateHealthEvent.AddDynamic(this, &AOB_Character::UpdateHealthHUD);
-	HealthComp->DeathEvent.AddDynamic(this, &AOB_Character::OnDeath);
 	AddOwnedComponent(HealthComp);
 }
 
@@ -49,6 +46,10 @@ void AOB_Character::BeginPlay()
 {
 	Super::BeginPlay();
 
+	AmmoComp->UpdateAmmo.AddDynamic(this, &AOB_Character::UpdateAmmoHUD);
+	
+	HealthComp->UpdateHealthEvent.AddDynamic(this, &AOB_Character::UpdateHealthHUD);
+	HealthComp->DeathEvent.AddDynamic(this, &AOB_Character::OnDeath);
 }
 
 void AOB_Character::PickUpWeapon(AOB_WeaponBase* WeaponPickUp)
