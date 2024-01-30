@@ -11,8 +11,11 @@ AOB_EnemyBase::AOB_EnemyBase()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	TriggerSphere = CreateDefaultSubobject<USphereComponent>("TriggerSphere");
-	TriggerSphere->SetupAttachment(GetCapsuleComponent());
+	TriggerChaseSphere = CreateDefaultSubobject<USphereComponent>("TriggerChaseSphere");
+	TriggerChaseSphere->SetupAttachment(GetCapsuleComponent());
+
+	TriggerAttackSphere = CreateDefaultSubobject<USphereComponent>("TriggerAttackSphere");
+	TriggerAttackSphere->SetupAttachment(GetCapsuleComponent());
 
 	HealthComp = CreateDefaultSubobject<UOB_HealthComp>("HealthComp");
 	AddOwnedComponent(HealthComp);
@@ -24,8 +27,11 @@ void AOB_EnemyBase::BeginPlay()
 {
 	Super::BeginPlay();
 
-	TriggerSphere->OnComponentBeginOverlap.AddDynamic(this, &AOB_EnemyBase::OnTrigger);
-	TriggerSphere->OnComponentEndOverlap.AddDynamic(this, &AOB_EnemyBase::OnEndTrigger);
+	TriggerChaseSphere->OnComponentBeginOverlap.AddDynamic(this, &AOB_EnemyBase::OnTriggerChase);
+	TriggerChaseSphere->OnComponentEndOverlap.AddDynamic(this, &AOB_EnemyBase::OnEndTriggerChase);
+
+	TriggerAttackSphere->OnComponentBeginOverlap.AddDynamic(this, &AOB_EnemyBase::OnTriggerAttack);
+	TriggerAttackSphere->OnComponentEndOverlap.AddDynamic(this, &AOB_EnemyBase::OnEndTriggerAttack);
 
 	HealthComp->UpdateHealthEvent.AddDynamic(this, &AOB_EnemyBase::UpdateHealthHUD);
 	HealthComp->DeathEvent.AddDynamic(this, &AOB_EnemyBase::OnDeath);
@@ -39,25 +45,48 @@ void AOB_EnemyBase::OnDeath()
 	Destroy();
 }
 
-void AOB_EnemyBase::OnTrigger(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void AOB_EnemyBase::OnTriggerChase(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	AOB_Character* Character = Cast<AOB_Character>(OtherActor);
+	AOB_Character* CharacterRef = Cast<AOB_Character>(OtherActor);
 
-	if(Character != nullptr)
+	if(CharacterRef != nullptr)
 	{
 		CurrentState = CHASE;
-		OnStateChange.Broadcast(CurrentState, Character);
+		OnStateChange.Broadcast(CurrentState, CharacterRef);
 	}
 }
 
-void AOB_EnemyBase::OnEndTrigger(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+void AOB_EnemyBase::OnEndTriggerChase(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	AOB_Character* Character = Cast<AOB_Character>(OtherActor);
+	AOB_Character* CharacterRef = Cast<AOB_Character>(OtherActor);
 
-	if(Character != nullptr)
+	if(CharacterRef != nullptr)
 	{
 		CurrentState = IDLE;
-		OnStateChange.Broadcast(CurrentState, Character);
+		OnStateChange.Broadcast(CurrentState, CharacterRef);
 	}
 }
 
+void AOB_EnemyBase::OnTriggerAttack(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	AOB_Character* CharacterRef = Cast<AOB_Character>(OtherActor);
+
+	if(CharacterRef != nullptr)
+	{
+		CurrentState = ATTACK;
+		CharacterRef->GetHealthComp()->ApplyDamage(5);
+		OnStateChange.Broadcast(CurrentState, CharacterRef);
+
+	}
+}
+
+void AOB_EnemyBase::OnEndTriggerAttack(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	AOB_Character* CharacterRef = Cast<AOB_Character>(OtherActor);
+
+	if(CharacterRef != nullptr)
+	{
+		CurrentState = CHASE;
+		OnStateChange.Broadcast(CurrentState, CharacterRef);
+	}
+}

@@ -5,8 +5,6 @@
 #include "Runtime/AIModule/Classes/AIController.h"
 #include "OB_EnemyBaseController.generated.h"
 
-class AOB_Character;
-
 
 UCLASS()
 class OUTBANKS_API AOB_EnemyBaseController : public AAIController
@@ -14,7 +12,9 @@ class OUTBANKS_API AOB_EnemyBaseController : public AAIController
 	GENERATED_BODY()
 
 	UPROPERTY()
-	AOB_Character* PlayerToChase;
+	class AOB_Character* PlayerToChase = nullptr;
+
+	bool Chasing = false;
 
 public:
 	AOB_EnemyBaseController();
@@ -27,4 +27,5 @@ protected:
 
 public:
 	virtual void Tick(float DeltaTime) override;
+	
 };

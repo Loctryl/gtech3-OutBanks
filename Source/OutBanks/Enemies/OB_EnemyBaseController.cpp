@@ -22,9 +22,9 @@ void AOB_EnemyBaseController::Tick(float DeltaTime)
 { 
 	Super::Tick(DeltaTime);
 
-	if(PlayerToChase)
+	if(PlayerToChase && Chasing)
 	{
-		MoveToActor(PlayerToChase);
+		MoveToActor(PlayerToChase, 1);
 	}
 }
 
@@ -34,12 +34,16 @@ void AOB_EnemyBaseController::OnPawnStateChange(BaseStates NewState, AOB_Charact
 	{
 		case CHASE:
 			PlayerToChase = Player;
+			Chasing = true;
 			break;
 		case IDLE:
-			PlayerToChase = nullptr;
+			PlayerToChase = Player;
+			Chasing = false;
 			StopMovement();
 			break;
 		case ATTACK:
+			PlayerToChase = Player;
+			Chasing = false;
 			StopMovement();
 			break;
 	}

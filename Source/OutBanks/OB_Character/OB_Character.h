@@ -57,6 +57,9 @@ public:
 	
 	UCameraComponent* GetFirstPersonCameraComponent() const { return FPCameraComp; }
 
+	UFUNCTION()
+	UOB_HealthComp* GetHealthComp() { return HealthComp; }
+
 	UOB_AmmoComp* GetAmmoComponent() const { return AmmoComp; }
 	
 	AOB_WeaponBase* GetWeapon() const { return WeaponHandle; }
