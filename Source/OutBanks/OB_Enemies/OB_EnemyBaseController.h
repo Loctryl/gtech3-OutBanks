@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "CoreMinimal.h"
-#include "OutBanks/Enemies/OB_EnemyBase.h"
+#include "OutBanks/OB_Enemies/OB_EnemyBase.h"
 #include "Runtime/AIModule/Classes/AIController.h"
 #include "OB_EnemyBaseController.generated.h"
 

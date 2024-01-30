@@ -1,6 +1,6 @@
-﻿#include <OutBanks/Enemies/OB_EnemyBaseController.h>
-#include "OutBanks/Enemies/OB_EnemyBase.h"
+﻿#include <OutBanks/OB_Enemies/OB_EnemyBaseController.h>
 #include "OutBanks/OB_Character/OB_Character.h"
+#include "OutBanks/OB_Enemies/OB_EnemyBase.h"
 
 
 AOB_EnemyBaseController::AOB_EnemyBaseController()

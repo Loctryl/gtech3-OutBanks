@@ -1,4 +1,4 @@
-﻿#include "OutBanks/Enemies/OB_EnemyBase.h"
+﻿#include "OutBanks/OB_Enemies/OB_EnemyBase.h"
 
 #include <Components/CapsuleComponent.h>
 #include <Components/SphereComponent.h>
