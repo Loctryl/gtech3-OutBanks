@@ -54,6 +54,12 @@ protected:
 
 	void SpawnEnemies(TSubclassOf<AActor> EnemyClass);
 
+	void SpawnObstacles(TSubclassOf<AActor> ObsClass);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int ObstaclesOnTile = 2;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int PickUpOnTile = 2;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int EnemiesOnTile = 2;
 

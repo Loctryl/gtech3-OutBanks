@@ -39,7 +39,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	float GetHealthPercent() { return float(CurrentHealth) / float(MaxHealth); }
 
+	UPROPERTY()
 	FDeath DeathEvent;
 
+	UPROPERTY()
 	FUpdateHealth UpdateHealthEvent;
 };

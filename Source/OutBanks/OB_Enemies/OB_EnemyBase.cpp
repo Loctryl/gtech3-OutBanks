@@ -103,3 +103,8 @@ void AOB_EnemyBase::OnEndTriggerAttack(UPrimitiveComponent* OverlappedComponent,
 		GetWorldTimerManager().ClearTimer(TimerHandle);
 	}
 }
+
+void AOB_EnemyBase::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	GetWorldTimerManager().ClearTimer(TimerHandle);
+}

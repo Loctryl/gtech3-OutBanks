@@ -50,8 +50,10 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintAssignable)
 	FPlayerDeath OnPlayerDeath;
 	
+	
 	UFUNCTION(BlueprintCallable, Category = Weapon)
 	void SetHasRifle(const bool NewHasRifle) { bHasRifle = NewHasRifle; }
+	
 	UFUNCTION(BlueprintCallable, Category = Weapon)
 	bool GetHasRifle() const { return bHasRifle; }
 	

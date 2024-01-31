@@ -1,10 +1,10 @@
-﻿#include <Kismet/KismetMathLibrary.h>
-#include <OutBanks/OB_Enemies/OB_EnemyBase.h>
-#include <OutBanks/OB_Tiles/OB_Tile.h>
+﻿#include <OutBanks/OB_Tiles/OB_Tile.h>
 #include "Components/ArrowComponent.h"
 #include "Components/BoxComponent.h"
 #include "Components/MeshComponent.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "OutBanks/OB_Character/OB_Character.h"
+#include "OutBanks/OB_Enemies/OB_EnemyBase.h"
 
 
 AOB_Tile::AOB_Tile()
@@ -31,7 +31,6 @@ AOB_Tile::AOB_Tile()
 
 	AttachPoint = CreateDefaultSubobject<UArrowComponent>("AttachPoint");
 	AttachPoint->SetupAttachment(SceneRootComp);
-
 }
 
 void AOB_Tile::BeginPlay()
@@ -43,6 +42,11 @@ void AOB_Tile::BeginPlay()
 	for(int i = 0; i < EnemiesOnTile; i++)
 	{
 		SpawnEnemies(EnemiesClasses[UKismetMathLibrary::RandomInteger(EnemiesClasses.Num())]);
+	}
+
+	for(int i = 0; i < ObstaclesOnTile; i++)
+	{
+		SpawnObstacles(ObstacleClasses[UKismetMathLibrary::RandomInteger(ObstacleClasses.Num())]);
 	}
 }
 
@@ -63,6 +67,17 @@ void AOB_Tile::SpawnEnemies(TSubclassOf<AActor> EnemyClass)
 
 	FActorSpawnParameters ActorSpawnParams;
 	Enemies.Add(GetWorld()->SpawnActor<AOB_EnemyBase>(EnemyClass, Location, FRotator(0,180,0)));
+}
+
+void AOB_Tile::SpawnObstacles(TSubclassOf<AActor> ObsClass)
+{
+	const FVector Location = UKismetMathLibrary::RandomPointInBoundingBox(SpawnArea->GetComponentLocation(), SpawnArea->GetScaledBoxExtent());
+	const FTransform Transform = UKismetMathLibrary::MakeTransform(Location, FRotator(0));
+
+	UChildActorComponent* ChildActorComp = NewObject<UChildActorComponent>(this);
+	ChildActorComp->SetWorldTransform(Transform);
+	ChildActorComp->SetChildActorClass(ObsClass);
+	ChildActorComp->RegisterComponent();
 }
 
 void AOB_Tile::ToDestroy()

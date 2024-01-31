@@ -1,8 +1,8 @@
 
 #include "OB_GameMode.h"
 #include "OutBanks/OB_Character/OB_Character.h"
-#include "UObject/ConstructorHelpers.h"
 #include "OutBanks/OB_Tiles/OB_Tile.h"
+#include "UObject/ConstructorHelpers.h"
 
 AOB_GameMode::AOB_GameMode()
 	: Super()
@@ -15,9 +15,9 @@ AOB_GameMode::AOB_GameMode()
 void AOB_GameMode::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	NextSpawnPoint = FVector(0);
-	for(int i = 0; i <= 10; i++)
+	NextSpawnPoint = FVector(1500,0,0);
+
+	for(int i = 0; i < 8; i++)
 	{
 		SpawnTile();
 	}
