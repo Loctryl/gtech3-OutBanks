@@ -68,13 +68,21 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent)
 	void UpdateHealthHUD();
 
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float AttackSpeed = 2;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int DamageDone = 5;
+	
+	FTimerHandle TimerHandle;
+
 public:
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION()
 	UOB_HealthComp* GetHealthComp() { return HealthComp; }
 
-	BaseStates GetCurrentState() { return CurrentState; }
+	BaseStates GetCurrentState() const { return CurrentState; }
 
 	UPROPERTY(VisibleAnywhere, BlueprintAssignable)
 	FChangeState OnStateChange;

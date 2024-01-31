@@ -64,8 +64,7 @@ void AOB_EnemyBase::OnEndTriggerChase(UPrimitiveComponent* OverlappedComponent, 
 	{
 		CurrentState = IDLE;
 		OnStateChange.Broadcast(CurrentState, CharacterRef);
-
-		FTimerHandle TimerHandle;
+		
 		GetWorldTimerManager().SetTimer(TimerHandle, [this]() 
 		{
 			Destroy();
@@ -80,9 +79,15 @@ void AOB_EnemyBase::OnTriggerAttack(UPrimitiveComponent* OverlappedComponent, AA
 	if(CharacterRef != nullptr)
 	{
 		CurrentState = ATTACK;
-		CharacterRef->GetHealthComp()->ApplyDamage(5);
 		OnStateChange.Broadcast(CurrentState, CharacterRef);
 
+		CharacterRef->GetHealthComp()->ApplyDamage(DamageDone);
+
+		GetWorldTimerManager().SetTimer(TimerHandle, [this, CharacterRef]() 
+		{
+			CharacterRef->GetHealthComp()->ApplyDamage(DamageDone);
+
+		}, AttackSpeed, true);
 	}
 }
 
@@ -94,5 +99,7 @@ void AOB_EnemyBase::OnEndTriggerAttack(UPrimitiveComponent* OverlappedComponent,
 	{
 		CurrentState = CHASE;
 		OnStateChange.Broadcast(CurrentState, CharacterRef);
+
+		GetWorldTimerManager().ClearTimer(TimerHandle);
 	}
 }
