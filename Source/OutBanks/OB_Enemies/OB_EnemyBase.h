@@ -74,6 +74,8 @@ public:
 	UFUNCTION()
 	UOB_HealthComp* GetHealthComp() { return HealthComp; }
 
+	BaseStates GetCurrentState() { return CurrentState; }
+
 	UPROPERTY(VisibleAnywhere, BlueprintAssignable)
 	FChangeState OnStateChange;
 };

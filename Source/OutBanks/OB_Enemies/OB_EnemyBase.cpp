@@ -64,6 +64,12 @@ void AOB_EnemyBase::OnEndTriggerChase(UPrimitiveComponent* OverlappedComponent, 
 	{
 		CurrentState = IDLE;
 		OnStateChange.Broadcast(CurrentState, CharacterRef);
+
+		FTimerHandle TimerHandle;
+		GetWorldTimerManager().SetTimer(TimerHandle, [this]() 
+		{
+			Destroy();
+		}, 5, false);
 	}
 }
 

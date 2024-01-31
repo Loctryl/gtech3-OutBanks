@@ -1,5 +1,3 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -13,6 +11,21 @@ class AOB_GameMode : public AGameModeBase
 
 public:
 	AOB_GameMode();
+
+	
+protected:
+	virtual void BeginPlay() override;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class AOB_Tile>TileClass;
+	
+	FVector NextSpawnPoint;
+
+	UFUNCTION()
+	void SpawnTile();
+
+	UFUNCTION()
+	void TriggerSpawn(AOB_Tile* Tile);
 };
 
 

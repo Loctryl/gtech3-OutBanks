@@ -12,10 +12,6 @@ AOB_EnemyBaseController::AOB_EnemyBaseController()
 void AOB_EnemyBaseController::BeginPlay()
 {
 	Super::BeginPlay();
-
-	AOB_EnemyBase* EnemyRef = Cast<AOB_EnemyBase>(GetPawn());
-
-	EnemyRef->OnStateChange.AddDynamic(this, &AOB_EnemyBaseController::OnPawnStateChange);
 }
 
 void AOB_EnemyBaseController::Tick(float DeltaTime) 
@@ -47,4 +43,13 @@ void AOB_EnemyBaseController::OnPawnStateChange(BaseStates NewState, AOB_Charact
 			StopMovement();
 			break;
 	}
+}
+
+void AOB_EnemyBaseController::OnPossess(APawn* InPawn)
+{
+	Super::OnPossess(InPawn);
+	
+	AOB_EnemyBase* EnemyRef = Cast<AOB_EnemyBase>(InPawn);
+
+	EnemyRef->OnStateChange.AddDynamic(this, &AOB_EnemyBaseController::OnPawnStateChange);
 }
