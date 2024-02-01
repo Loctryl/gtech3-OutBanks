@@ -39,6 +39,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	UInputAction* ReloadAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
+	UInputAction* PauseAction;
+
 
 	UPROPERTY(VisibleAnywhere)
 	AOB_Character* CharacterRef;

@@ -82,7 +82,6 @@ void AOB_Character::FlashTime(float Timer, float Amount)
 {
 	IncreaseSpeed(Amount);
 
-	FTimerHandle TimerHandle;
 	GetWorld()->GetTimerManager().SetTimer(TimerHandle,[this, Amount]() 
 	{
 		DecreaseSpeed(Amount);
@@ -97,4 +96,9 @@ void AOB_Character::IncreaseSpeed(float Amount)
 void AOB_Character::DecreaseSpeed(float Amount)
 {
 	GetCharacterMovement()->MaxWalkSpeed -= Amount;
+}
+
+void AOB_Character::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
 }
