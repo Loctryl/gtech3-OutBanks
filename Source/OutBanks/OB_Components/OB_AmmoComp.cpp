@@ -10,16 +10,12 @@ UOB_AmmoComp::UOB_AmmoComp()
 void UOB_AmmoComp::BeginPlay()
 {
 	Super::BeginPlay();
-
 	
 }
 
-
-// Called every frame
 void UOB_AmmoComp::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
 }
 
 void UOB_AmmoComp::Reload()

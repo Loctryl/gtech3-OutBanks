@@ -52,11 +52,13 @@ protected:
 						const FHitResult& SweepResult);
 
 
-	void SpawnEnemies(TSubclassOf<AActor> EnemyClass);
+	void SpawnEnemies();
 
-	void SpawnObstacles(TSubclassOf<AActor> ObsClass);
+	void SpawnObstacles();
 	
-	void SpawnPickUps(TSubclassOf<AActor> PickUpClass);
+	void SpawnPickUps();
+
+	TSubclassOf<AActor> GetClassInMapWithRate(TMap<TSubclassOf<AActor>, float> Map);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int ObstaclesOnTile = 2;
@@ -66,13 +68,13 @@ protected:
 	int EnemiesOnTile = 2;
 
 	UPROPERTY(EditAnywhere)
-	TArray<TSubclassOf<AActor>>ObstacleClasses;
+	TMap<TSubclassOf<AActor>, float>ObstacleClasses;
+	
+	UPROPERTY(EditAnywhere)
+	TMap<TSubclassOf<AActor>, float>PickUpClasses;
 
 	UPROPERTY(EditAnywhere)
-	TArray<TSubclassOf<AActor>>PickUpClasses;
-
-	UPROPERTY(EditAnywhere)
-	TArray<TSubclassOf<AActor>>EnemiesClasses;
+	TMap<TSubclassOf<AActor>, float>EnemiesClasses;
 
 public:
 	virtual void Tick(float DeltaTime) override;
