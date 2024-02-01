@@ -34,14 +34,15 @@ void AOB_EnemyBase::BeginPlay()
 	TriggerAttackSphere->OnComponentEndOverlap.AddDynamic(this, &AOB_EnemyBase::OnEndTriggerAttack);
 
 	HealthComp->UpdateHealthEvent.AddDynamic(this, &AOB_EnemyBase::UpdateHealthHUD);
-	HealthComp->DeathEvent.AddDynamic(this, &AOB_EnemyBase::OnDeath);
+	HealthComp->DeathEvent.AddDynamic(this, &AOB_EnemyBase::Die);
 }
 
 void AOB_EnemyBase::Tick(float DeltaTime) { Super::Tick(DeltaTime); }
 
 
-void AOB_EnemyBase::OnDeath()
+void AOB_EnemyBase::Die()
 {
+	OnDeath.Broadcast();
 	Destroy();
 }
 

@@ -1,5 +1,8 @@
 
 #include "OB_GameMode.h"
+
+#include <OutBanks/OB_Enemies/OB_EnemyBase.h>
+
 #include "OutBanks/OB_Character/OB_Character.h"
 #include "OutBanks/OB_Tiles/OB_Tile.h"
 #include "UObject/ConstructorHelpers.h"
@@ -45,5 +48,10 @@ void AOB_GameMode::SpawnTile()
 
 	Spawned->OnExitTile.AddDynamic(this, &AOB_GameMode::TriggerSpawn);
 
+	for (auto en : Spawned->GetAllEnemies())
+	{
+		en->OnDeath.AddDynamic(this, &AOB_GameMode::IncreaseKillCount);
+	}
+	
 	NextSpawnPoint = Spawned->GetAttachPoint();
 }

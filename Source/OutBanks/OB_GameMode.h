@@ -4,6 +4,9 @@
 #include "GameFramework/GameModeBase.h"
 #include "OB_GameMode.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FUpdateKillCount);
+
+
 UCLASS(minimalapi)
 class AOB_GameMode : public AGameModeBase
 {
@@ -12,6 +15,8 @@ class AOB_GameMode : public AGameModeBase
 public:
 	AOB_GameMode();
 
+	UPROPERTY(BlueprintAssignable)
+	FUpdateKillCount UpdateKillCount;
 	
 protected:
 	virtual void BeginPlay() override;
@@ -21,11 +26,17 @@ protected:
 	
 	FVector NextSpawnPoint;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	int KillCount = 0;
+
 	UFUNCTION()
 	void SpawnTile();
 
 	UFUNCTION()
 	void TriggerSpawn(AOB_Tile* Tile);
+
+	UFUNCTION()
+	void IncreaseKillCount() { KillCount++; UpdateKillCount.Broadcast(); }
 };
 
 

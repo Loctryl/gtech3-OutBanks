@@ -82,6 +82,8 @@ public:
 	UFUNCTION()
 	FVector GetAttachPoint() { return AttachPoint->GetComponentLocation(); }
 
+	TArray<AOB_EnemyBase*> GetAllEnemies() { return Enemies; }
+
 	void ToDestroy();
 
 	UPROPERTY()

@@ -19,4 +19,9 @@ void AOB_PickUpBase::BeginPlay()
 	
 }
 
-void AOB_PickUpBase::Tick(float DeltaTime) { Super::Tick(DeltaTime); }
+void AOB_PickUpBase::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	
+}

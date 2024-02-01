@@ -16,6 +16,8 @@ enum BaseStates : uint8
 };
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FChangeState, BaseStates, NewState, AOB_Character*, Player);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnDeath);
+
 
 UCLASS()
 class OUTBANKS_API AOB_EnemyBase : public ACharacter
@@ -43,7 +45,7 @@ protected:
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 	UFUNCTION()
-	void OnDeath();
+	void Die();
 
 	UFUNCTION()
 	void OnTriggerChase(UPrimitiveComponent* OverlappedComponent,
@@ -88,4 +90,7 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintAssignable)
 	FChangeState OnStateChange;
+
+	UPROPERTY(VisibleAnywhere, BlueprintAssignable)
+	FOnDeath OnDeath;
 };

@@ -38,6 +38,6 @@ void AOB_Projectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPr
 		if(Enemy)
 			Enemy->GetHealthComp()->ApplyDamage(10);
 		
-		Destroy();
 	}
+	Destroy();
 }
