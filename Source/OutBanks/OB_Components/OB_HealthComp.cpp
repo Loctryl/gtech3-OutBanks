@@ -22,7 +22,7 @@ void UOB_HealthComp::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 }
 
 
-void UOB_HealthComp::ApplyDamage(int32 Amount)
+void UOB_HealthComp::ApplyDamage(int Amount)
 {
 	if(Amount >= CurrentHealth)
 	{
@@ -36,7 +36,7 @@ void UOB_HealthComp::ApplyDamage(int32 Amount)
 }
 
 
-void UOB_HealthComp::Heal(int32 Amount)
+void UOB_HealthComp::Heal(int Amount)
 {
 	if(Amount > MaxHealth - CurrentHealth)
 		CurrentHealth = MaxHealth;
@@ -44,4 +44,18 @@ void UOB_HealthComp::Heal(int32 Amount)
 		CurrentHealth += Amount;
 	
 	UpdateHealthEvent.Broadcast();
+}
+
+
+void UOB_HealthComp::DotDamage(float LoopTimer, int Amount)
+{
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle,[this,Amount]() 
+	{
+		ApplyDamage(Amount);
+	}, LoopTimer, true);
+}
+
+void UOB_HealthComp::StopDotDamage()
+{
+	GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
 }

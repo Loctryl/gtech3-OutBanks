@@ -14,6 +14,8 @@ class OUTBANKS_API UOB_HealthComp : public UActorComponent
 {
 	GENERATED_BODY()
 
+	FTimerHandle TimerHandle;
+
 public:
 	UOB_HealthComp();
 
@@ -21,20 +23,26 @@ protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Health)
-	int32 CurrentHealth;
+	int CurrentHealth;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Health)
-	int32 MaxHealth;
+	int MaxHealth;
 
 public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
 								FActorComponentTickFunction* ThisTickFunction) override;
 
 	UFUNCTION(BlueprintCallable)
-	void ApplyDamage(int32 Amount);
+	void ApplyDamage(int Amount);
 
 	UFUNCTION(BlueprintCallable)
-	void Heal(int32 Amount);
+	void Heal(int Amount);
+
+	UFUNCTION(BlueprintCallable)
+	void DotDamage(float LoopTimer, int Amount);
+
+	UFUNCTION(BlueprintCallable)
+	void StopDotDamage();
 
 	UFUNCTION(BlueprintCallable)
 	float GetHealthPercent() { return float(CurrentHealth) / float(MaxHealth); }

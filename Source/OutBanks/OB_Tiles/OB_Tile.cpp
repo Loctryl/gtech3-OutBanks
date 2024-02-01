@@ -1,7 +1,6 @@
 ﻿#include <OutBanks/OB_Tiles/OB_Tile.h>
 #include "Components/ArrowComponent.h"
 #include "Components/BoxComponent.h"
-#include "Components/MeshComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "OutBanks/OB_Character/OB_Character.h"
 #include "OutBanks/OB_Enemies/OB_EnemyBase.h"
@@ -48,6 +47,11 @@ void AOB_Tile::BeginPlay()
 	{
 		SpawnObstacles(ObstacleClasses[UKismetMathLibrary::RandomInteger(ObstacleClasses.Num())]);
 	}
+
+	for(int i = 0; i < PickUpOnTile; i++)
+	{
+		SpawnPickUps(PickUpClasses[UKismetMathLibrary::RandomInteger(PickUpClasses.Num())]);
+	}
 }
 
 void AOB_Tile::Tick(float DeltaTime) { Super::Tick(DeltaTime); }
@@ -77,6 +81,17 @@ void AOB_Tile::SpawnObstacles(TSubclassOf<AActor> ObsClass)
 	UChildActorComponent* ChildActorComp = NewObject<UChildActorComponent>(this);
 	ChildActorComp->SetWorldTransform(Transform);
 	ChildActorComp->SetChildActorClass(ObsClass);
+	ChildActorComp->RegisterComponent();
+}
+
+void AOB_Tile::SpawnPickUps(TSubclassOf<AActor> PickUpClass)
+{
+	const FVector Location = UKismetMathLibrary::RandomPointInBoundingBox(SpawnArea->GetComponentLocation(), SpawnArea->GetScaledBoxExtent());
+	const FTransform Transform = UKismetMathLibrary::MakeTransform(Location, FRotator(0));
+
+	UChildActorComponent* ChildActorComp = NewObject<UChildActorComponent>(this);
+	ChildActorComp->SetWorldTransform(Transform);
+	ChildActorComp->SetChildActorClass(PickUpClass);
 	ChildActorComp->RegisterComponent();
 }
 

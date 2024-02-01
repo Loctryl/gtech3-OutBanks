@@ -2,6 +2,7 @@
 
 #include "OB_Character.h"
 
+#include <GameFramework/CharacterMovementComponent.h>
 #include <OutBanks/OB_Character/OB_PlayerController.h>
 #include <OutBanks/OB_Components/OB_HealthComp.h>
 #include <OutBanks/OB_Weapons/OB_WeaponBase.h>
@@ -75,4 +76,25 @@ void AOB_Character::OnDeath()
 	DetachFromControllerPendingDestroy();
 	
 	OnPlayerDeath.Broadcast();
+}
+
+void AOB_Character::FlashTime(float Timer, float Amount)
+{
+	IncreaseSpeed(Amount);
+
+	FTimerHandle TimerHandle;
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle,[this, Amount]() 
+	{
+		DecreaseSpeed(Amount);
+	}, Timer, false);
+}
+
+void AOB_Character::IncreaseSpeed(float Amount)
+{
+	GetCharacterMovement()->MaxWalkSpeed += Amount;
+}
+
+void AOB_Character::DecreaseSpeed(float Amount)
+{
+	GetCharacterMovement()->MaxWalkSpeed -= Amount;
 }

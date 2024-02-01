@@ -45,9 +45,32 @@ bool UOB_AmmoComp::ShootOneAmmo()
 {
 	if(CurrentAmmoInClip == 0) return false;
 
-	CurrentAmmoInClip--;
-
-	UpdateAmmo.Broadcast();
+	if(!Rambo)
+	{
+		CurrentAmmoInClip--;
+		UpdateAmmo.Broadcast();
+	}
+		
 	return true;
 }
 
+void UOB_AmmoComp::PickUpAmmo(int Amount)
+{
+	if(Amount > MaxAmmoInReserve - CurrentAmmoInReserve)
+		CurrentAmmoInReserve = MaxAmmoInReserve;
+	else
+		CurrentAmmoInReserve += Amount;
+	
+	UpdateAmmo.Broadcast();
+}
+
+void UOB_AmmoComp::RamboTime(float Timer)
+{
+	Rambo = true;
+
+	FTimerHandle TimerHandle;
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle,[this]() 
+	{
+		Rambo = false;
+	}, Timer, false);
+}

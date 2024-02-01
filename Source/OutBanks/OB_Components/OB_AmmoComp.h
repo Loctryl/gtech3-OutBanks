@@ -48,5 +48,14 @@ public:
 	UFUNCTION(BlueprintCallable)
 	bool ShootOneAmmo();
 
+	UFUNCTION(BlueprintCallable)
+	void PickUpAmmo(int Amount);
+
+	UFUNCTION(BlueprintCallable)
+	void RamboTime(float Timer);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool Rambo;
+
 	FUpdateAmmo UpdateAmmo;
 };

@@ -17,10 +17,10 @@ class AOB_Character : public ACharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FPCameraComp;
 
-	UPROPERTY(Instanced, EditAnywhere, BlueprintReadOnly, Category = Component, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(Instanced, EditAnywhere, BlueprintReadWrite, Category = Component, meta = (AllowPrivateAccess = "true"))
 	class UOB_AmmoComp* AmmoComp;
 	
-	UPROPERTY(Instanced, EditAnywhere, BlueprintReadOnly, Category = Component, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(Instanced, EditAnywhere, BlueprintReadWrite, Category = Component, meta = (AllowPrivateAccess = "true"))
 	class UOB_HealthComp* HealthComp;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Weapon, meta = (AllowPrivateAccess = "true"))
@@ -69,4 +69,12 @@ public:
 
 	UFUNCTION()
 	void PickUpWeapon(AOB_WeaponBase* WeaponPickUp);
+
+	UFUNCTION(BlueprintCallable)
+	void FlashTime(float Timer, float Amount);
+
+	UFUNCTION(BlueprintCallable)
+	void IncreaseSpeed(float Amount);
+	UFUNCTION(BlueprintCallable)
+	void DecreaseSpeed(float Amount);
 };

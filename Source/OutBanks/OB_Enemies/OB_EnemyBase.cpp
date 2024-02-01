@@ -82,7 +82,7 @@ void AOB_EnemyBase::OnTriggerAttack(UPrimitiveComponent* OverlappedComponent, AA
 		OnStateChange.Broadcast(CurrentState, CharacterRef);
 
 		CharacterRef->GetHealthComp()->ApplyDamage(DamageDone);
-
+		
 		GetWorldTimerManager().SetTimer(TimerHandle, [this, CharacterRef]() 
 		{
 			CharacterRef->GetHealthComp()->ApplyDamage(DamageDone);
