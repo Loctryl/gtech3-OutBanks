@@ -82,10 +82,9 @@ void AOB_Character::FlashTime(float Timer, float Amount)
 {
 	IncreaseSpeed(Amount);
 
-	GetWorld()->GetTimerManager().SetTimer(TimerHandle,[this, Amount]() 
-	{
-		DecreaseSpeed(Amount);
-	}, Timer, false);
+	FTimerHandle TimerHandle;
+	FTimerDelegate TimerDelegate = FTimerDelegate::CreateUObject(this, &AOB_Character::DecreaseSpeed, Amount);
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle, TimerDelegate, Timer, false);
 }
 
 void AOB_Character::IncreaseSpeed(float Amount)
@@ -100,5 +99,5 @@ void AOB_Character::DecreaseSpeed(float Amount)
 
 void AOB_Character::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-	GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
+	GetWorld()->GetTimerManager().ClearAllTimersForObject(this);
 }

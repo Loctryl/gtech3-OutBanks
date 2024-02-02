@@ -65,11 +65,9 @@ void AOB_EnemyBase::OnEndTriggerChase(UPrimitiveComponent* OverlappedComponent, 
 	{
 		CurrentState = IDLE;
 		OnStateChange.Broadcast(CurrentState, CharacterRef);
-		
-		GetWorldTimerManager().SetTimer(TimerHandle, [this]() 
-		{
-			Destroy();
-		}, 5, false);
+
+		FTimerDelegate TimerDelegate = FTimerDelegate::CreateUObject(this, &AOB_EnemyBase::ToDestroy);
+		GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, 5, false);
 	}
 }
 
@@ -83,12 +81,9 @@ void AOB_EnemyBase::OnTriggerAttack(UPrimitiveComponent* OverlappedComponent, AA
 		OnStateChange.Broadcast(CurrentState, CharacterRef);
 
 		CharacterRef->GetHealthComp()->ApplyDamage(DamageDone);
-		
-		GetWorldTimerManager().SetTimer(TimerHandle, [this, CharacterRef]() 
-		{
-			CharacterRef->GetHealthComp()->ApplyDamage(DamageDone);
 
-		}, AttackSpeed, true);
+		FTimerDelegate TimerDelegate = FTimerDelegate::CreateUObject(this, &AOB_EnemyBase::ApplyDamageToCharacter, CharacterRef);
+		GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, AttackSpeed, true);
 	}
 }
 
@@ -105,7 +100,14 @@ void AOB_EnemyBase::OnEndTriggerAttack(UPrimitiveComponent* OverlappedComponent,
 	}
 }
 
+void AOB_EnemyBase::ApplyDamageToCharacter(AOB_Character* Ref)
+{
+	Ref->GetHealthComp()->ApplyDamage(DamageDone);
+}
+
+
 void AOB_EnemyBase::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-	GetWorldTimerManager().ClearTimer(TimerHandle);
+	Super::EndPlay(EndPlayReason);
+	GetWorldTimerManager().ClearAllTimersForObject(this);
 }

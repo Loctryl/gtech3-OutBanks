@@ -20,8 +20,16 @@ class AOB_Projectile : public AActor
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
 	UProjectileMovementComponent* ProjectileMovement;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Projectile, meta = (AllowPrivateAccess = "true"))
+	class USoundBase* DamageSound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Projectile, meta = (AllowPrivateAccess = "true"))
+	class UParticleSystem* Particles;
+
 public:
 	AOB_Projectile();
+
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);

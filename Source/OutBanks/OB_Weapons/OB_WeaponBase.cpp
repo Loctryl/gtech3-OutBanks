@@ -1,6 +1,4 @@
 ﻿#include <OutBanks/OB_Weapons/OB_WeaponBase.h>
-#include <EnhancedInputComponent.h>
-#include <EnhancedInputSubsystems.h>
 #include <Components/BoxComponent.h>
 #include <Kismet/GameplayStatics.h>
 #include <OutBanks/OB_Weapons/OB_Projectile.h>
@@ -83,5 +81,5 @@ void AOB_WeaponBase::PlayAnimationAndSound()
 void AOB_WeaponBase::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
-	
+	GetWorldTimerManager().ClearAllTimersForObject(this);
 }

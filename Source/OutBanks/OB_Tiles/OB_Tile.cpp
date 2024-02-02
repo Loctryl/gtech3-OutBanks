@@ -124,8 +124,10 @@ void AOB_Tile::SpawnPickUps()
 void AOB_Tile::ToDestroy()
 {
 	for (auto en : Enemies)
-		if(en->GetCurrentState() == IDLE)
+		if(IsValid(en) && en->GetCurrentState() == IDLE)
+		{
+			GetWorldTimerManager().ClearAllTimersForObject(en);
 			en->Destroy();
-	
+		}
 	Destroy();
 }

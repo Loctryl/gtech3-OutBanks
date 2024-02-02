@@ -65,8 +65,13 @@ void UOB_AmmoComp::RamboTime(float Timer)
 	Rambo = true;
 
 	FTimerHandle TimerHandle;
-	GetWorld()->GetTimerManager().SetTimer(TimerHandle,[this]() 
-	{
-		Rambo = false;
-	}, Timer, false);
+	FTimerDelegate TimerDelegate = FTimerDelegate::CreateUObject(this, &UOB_AmmoComp::SetRambo, false);
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle, TimerDelegate, Timer, false);
 }
+
+void UOB_AmmoComp::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+	//GetWorld()->GetTimerManager().ClearAllTimersForObject(this);
+}
+

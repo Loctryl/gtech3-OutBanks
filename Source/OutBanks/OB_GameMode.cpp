@@ -31,7 +31,8 @@ void AOB_GameMode::TriggerSpawn(AOB_Tile* Tile)
 	SpawnTile();
 
 	FTimerHandle TimerHandle;
-	GetWorldTimerManager().SetTimer(TimerHandle, Tile, &AOB_Tile::ToDestroy, 5, false);
+	FTimerDelegate TimerDelegate = FTimerDelegate::CreateUObject(Tile, &AOB_Tile::ToDestroy);
+	GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, 5, false);
 }
 
 
@@ -50,8 +51,16 @@ void AOB_GameMode::SpawnTile()
 
 	for (auto en : Spawned->GetAllEnemies())
 	{
-		en->OnDeath.AddDynamic(this, &AOB_GameMode::IncreaseKillCount);
+		if(IsValid(en))
+			en->OnDeath.AddDynamic(this, &AOB_GameMode::IncreaseKillCount);
 	}
 	
 	NextSpawnPoint = Spawned->GetAttachPoint();
+}
+
+void AOB_GameMode::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+
+	GetWorldTimerManager().ClearAllTimersForObject(this);
 }

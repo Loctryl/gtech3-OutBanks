@@ -26,7 +26,6 @@ class AOB_Character : public ACharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Weapon, meta = (AllowPrivateAccess = "true"))
 	class AOB_WeaponBase* WeaponHandle;
 
-	FTimerHandle TimerHandle;
 
 protected:
 	virtual void BeginPlay() override;

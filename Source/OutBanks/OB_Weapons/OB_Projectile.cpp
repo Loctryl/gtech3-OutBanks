@@ -1,6 +1,7 @@
 #include "OB_Projectile.h"
 
 #include <Components/CapsuleComponent.h>
+#include <Kismet/GameplayStatics.h>
 #include <OutBanks/OB_Enemies/OB_EnemyBase.h>
 #include <OutBanks/OB_Components/OB_HealthComp.h>
 
@@ -36,8 +37,22 @@ void AOB_Projectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPr
 		AOB_EnemyBase* Enemy = Cast<AOB_EnemyBase>(OtherActor);
 		
 		if(Enemy)
+		{
 			Enemy->GetHealthComp()->ApplyDamage(10);
-		
+
+			if (DamageSound != nullptr)
+				UGameplayStatics::PlaySoundAtLocation(this, DamageSound, GetActorLocation());
+			
+			if (Particles != nullptr)
+				UGameplayStatics::SpawnEmitterAtLocation(this, Particles, GetActorLocation(),FRotator(0), FVector(0.05,0.05,0.05));
+		}
 	}
 	Destroy();
+}
+
+void AOB_Projectile::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+
+	GetWorldTimerManager().ClearAllTimersForObject(this);
 }

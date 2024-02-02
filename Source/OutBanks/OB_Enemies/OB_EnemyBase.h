@@ -44,6 +44,10 @@ protected:
 
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
+	void ApplyDamageToCharacter(AOB_Character* Ref);
+
+	void ToDestroy() { Destroy(); }
+
 	UFUNCTION()
 	void Die();
 

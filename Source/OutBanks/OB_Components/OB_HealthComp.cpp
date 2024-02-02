@@ -49,13 +49,17 @@ void UOB_HealthComp::Heal(int Amount)
 
 void UOB_HealthComp::DotDamage(float LoopTimer, int Amount)
 {
-	GetWorld()->GetTimerManager().SetTimer(TimerHandle,[this,Amount]() 
-	{
-		ApplyDamage(Amount);
-	}, LoopTimer, true);
+	FTimerDelegate TimerDelegate = FTimerDelegate::CreateUObject(this, &UOB_HealthComp::ApplyDamage, Amount);
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle, TimerDelegate, LoopTimer, true);
 }
 
 void UOB_HealthComp::StopDotDamage()
 {
 	GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
+}
+
+void UOB_HealthComp::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+	//GetWorld()->GetTimerManager().ClearAllTimersForObject(this);
 }

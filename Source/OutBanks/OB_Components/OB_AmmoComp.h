@@ -22,6 +22,10 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
+	void SetRambo(bool Value) { Rambo = Value; }
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 CurrentAmmoInClip;
 
