@@ -32,10 +32,10 @@ AOB_Tile::AOB_Tile()
 	AttachPoint->SetupAttachment(SceneRootComp);
 }
 
+
 void AOB_Tile::BeginPlay()
 {
 	Super::BeginPlay();
-
 	EndTrigger->OnComponentBeginOverlap.AddDynamic(this, &AOB_Tile::OnEndTrigger);
 
 	for(int i = 0; i < EnemiesOnTile; i++)
@@ -53,7 +53,6 @@ void AOB_Tile::BeginPlay()
 
 void AOB_Tile::Tick(float DeltaTime) { Super::Tick(DeltaTime); }
 
-
 void AOB_Tile::OnEndTrigger(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if(Cast<AOB_Character>(OtherActor))
@@ -61,6 +60,7 @@ void AOB_Tile::OnEndTrigger(UPrimitiveComponent* OverlappedComponent, AActor* Ot
 		OnExitTile.Broadcast(this);
 	}
 }
+
 
 TSubclassOf<AActor> AOB_Tile::GetClassInMapWithRate(TMap<TSubclassOf<AActor>, float> Map)
 {
@@ -80,9 +80,10 @@ TSubclassOf<AActor> AOB_Tile::GetClassInMapWithRate(TMap<TSubclassOf<AActor>, fl
 	return ClassPick;
 }
 
+
 void AOB_Tile::SpawnEnemies()
 {
-	TSubclassOf<AActor> EnClass = GetClassInMapWithRate(EnemiesClasses);
+	const TSubclassOf<AActor> EnClass = GetClassInMapWithRate(EnemiesClasses);
 	if(EnClass == nullptr) return;
 	
 	const FVector Location = UKismetMathLibrary::RandomPointInBoundingBox(SpawnArea->GetComponentLocation(),
@@ -92,9 +93,10 @@ void AOB_Tile::SpawnEnemies()
 	Enemies.Add(GetWorld()->SpawnActor<AOB_EnemyBase>(EnClass, Location, FRotator(0,180,0)));
 }
 
+
 void AOB_Tile::SpawnObstacles()
 {
-	TSubclassOf<AActor> ObsClass = GetClassInMapWithRate(ObstacleClasses);
+	const TSubclassOf<AActor> ObsClass = GetClassInMapWithRate(ObstacleClasses);
 	if(ObsClass == nullptr) return;
 	
 	const FVector Location = UKismetMathLibrary::RandomPointInBoundingBox(SpawnArea->GetComponentLocation(), SpawnArea->GetScaledBoxExtent());
@@ -106,9 +108,10 @@ void AOB_Tile::SpawnObstacles()
 	ChildActorComp->RegisterComponent();
 }
 
+
 void AOB_Tile::SpawnPickUps()
 {
-	TSubclassOf<AActor> PickUpClass = GetClassInMapWithRate(PickUpClasses);
+	const TSubclassOf<AActor> PickUpClass = GetClassInMapWithRate(PickUpClasses);
 	if(PickUpClass == nullptr) return;
 	
 	const FVector Location = UKismetMathLibrary::RandomPointInBoundingBox(SpawnArea->GetComponentLocation(), SpawnArea->GetScaledBoxExtent());

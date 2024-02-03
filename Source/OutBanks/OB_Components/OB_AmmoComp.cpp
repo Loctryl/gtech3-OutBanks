@@ -1,23 +1,6 @@
 ﻿#include <OutBanks/OB_Components/OB_AmmoComp.h>
 
 
-UOB_AmmoComp::UOB_AmmoComp()
-{
-	PrimaryComponentTick.bCanEverTick = true;
-	
-}
-
-void UOB_AmmoComp::BeginPlay()
-{
-	Super::BeginPlay();
-	
-}
-
-void UOB_AmmoComp::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-}
-
 void UOB_AmmoComp::Reload()
 {
 	if(CurrentAmmoInReserve == 0 || CurrentAmmoInClip == MaxAmmoInClip) return;
@@ -50,7 +33,7 @@ bool UOB_AmmoComp::ShootOneAmmo()
 	return true;
 }
 
-void UOB_AmmoComp::PickUpAmmo(int Amount)
+void UOB_AmmoComp::PickUpAmmo(const int Amount)
 {
 	if(Amount > MaxAmmoInReserve - CurrentAmmoInReserve)
 		CurrentAmmoInReserve = MaxAmmoInReserve;
@@ -60,18 +43,11 @@ void UOB_AmmoComp::PickUpAmmo(int Amount)
 	UpdateAmmo.Broadcast();
 }
 
-void UOB_AmmoComp::RamboTime(float Timer)
+void UOB_AmmoComp::RamboTime(const float Timer)
 {
 	Rambo = true;
 
 	FTimerHandle TimerHandle;
-	FTimerDelegate TimerDelegate = FTimerDelegate::CreateUObject(this, &UOB_AmmoComp::SetRambo, false);
+	const FTimerDelegate TimerDelegate = FTimerDelegate::CreateUObject(this, &UOB_AmmoComp::SetRambo, false);
 	GetWorld()->GetTimerManager().SetTimer(TimerHandle, TimerDelegate, Timer, false);
 }
-
-void UOB_AmmoComp::EndPlay(const EEndPlayReason::Type EndPlayReason)
-{
-	Super::EndPlay(EndPlayReason);
-	//GetWorld()->GetTimerManager().ClearAllTimersForObject(this);
-}
-

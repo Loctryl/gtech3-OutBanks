@@ -14,15 +14,8 @@ class AOB_GameMode : public AGameModeBase
 
 public:
 	AOB_GameMode();
-
-	UPROPERTY(BlueprintAssignable)
-	FUpdateKillCount UpdateKillCount;
 	
 protected:
-	virtual void BeginPlay() override;
-
-	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
-
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class AOB_Tile>TileClass;
 	
@@ -31,6 +24,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	int KillCount = 0;
 
+	
+	virtual void BeginPlay() override;
+	
 	UFUNCTION()
 	void SpawnTile();
 
@@ -39,4 +35,8 @@ protected:
 
 	UFUNCTION()
 	void IncreaseKillCount() { KillCount++; UpdateKillCount.Broadcast(); }
+	
+public:
+	UPROPERTY(BlueprintAssignable)
+	FUpdateKillCount UpdateKillCount;
 };

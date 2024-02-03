@@ -10,13 +10,4 @@ AOB_ObstacleBase::AOB_ObstacleBase()
 	
 	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>("MeshComp");
 	MeshComp->SetupAttachment(SceneRootComp);
-	
 }
-
-void AOB_ObstacleBase::BeginPlay()
-{
-	Super::BeginPlay();
-
-}
-
-void AOB_ObstacleBase::Tick(float DeltaTime) { Super::Tick(DeltaTime); }

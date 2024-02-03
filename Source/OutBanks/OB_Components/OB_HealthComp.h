@@ -8,7 +8,6 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDeath);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FUpdateHealth);
 
 
-
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class OUTBANKS_API UOB_HealthComp : public UActorComponent
 {
@@ -16,42 +15,31 @@ class OUTBANKS_API UOB_HealthComp : public UActorComponent
 
 	FTimerHandle TimerHandle;
 
-public:
-	UOB_HealthComp();
-
 protected:
-	virtual void BeginPlay() override;
-
-	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Health)
 	int CurrentHealth;
-
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Health)
 	int MaxHealth;
 
 public:
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
-								FActorComponentTickFunction* ThisTickFunction) override;
-
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = Health)
 	void ApplyDamage(int Amount);
-
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = Health)
 	void Heal(int Amount);
 
-	UFUNCTION(BlueprintCallable)
+	
+	UFUNCTION(BlueprintCallable, Category = Health)
 	void DotDamage(float LoopTimer, int Amount);
-
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = Health)
 	void StopDotDamage();
 
-	UFUNCTION(BlueprintCallable)
-	float GetHealthPercent() { return float(CurrentHealth) / float(MaxHealth); }
+	
+	UFUNCTION(BlueprintCallable, Category = Health)
+	float GetHealthPercent() const { return float(CurrentHealth) / float(MaxHealth); }
 
-	UPROPERTY()
+	UPROPERTY(BlueprintAssignable)
 	FDeath DeathEvent;
 
-	UPROPERTY()
+	UPROPERTY(BlueprintAssignable)
 	FUpdateHealth UpdateHealthEvent;
 };

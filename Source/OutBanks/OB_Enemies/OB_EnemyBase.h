@@ -24,32 +24,17 @@ class OUTBANKS_API AOB_EnemyBase : public ACharacter
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Mesh, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, Category = Mesh)
 	class USphereComponent* TriggerChaseSphere;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Mesh, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, Category = Mesh)
 	USphereComponent* TriggerAttackSphere;
 
-	UPROPERTY(Instanced, EditAnywhere, BlueprintReadOnly, Category = Component, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(Instanced, EditAnywhere, BlueprintGetter=BPGetHealthComp, Category = Component)
 	class UOB_HealthComp* HealthComp;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=State, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintGetter=BPCurrentState, Category=State)
 	TEnumAsByte<BaseStates> CurrentState;
-
-public:
-	AOB_EnemyBase();
-
-protected:
-	virtual void BeginPlay() override;
-
-	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
-
-	void ApplyDamageToCharacter(AOB_Character* Ref);
-
-	void ToDestroy() { Destroy(); }
-
-	UFUNCTION()
-	void Die();
 
 	UFUNCTION()
 	void OnTriggerChase(UPrimitiveComponent* OverlappedComponent,
@@ -73,23 +58,38 @@ protected:
 					AActor* OtherActor, UPrimitiveComponent* OtherComp,
 					int32 OtherBodyIndex);
 
-	UFUNCTION(BlueprintImplementableEvent)
-	void UpdateHealthHUD();
+	UFUNCTION()
+	void Die();
 
-	
+public:
+	AOB_EnemyBase();
+
+protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float AttackSpeed = 2;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int DamageDone = 5;
 	
 	FTimerHandle TimerHandle;
+	
+	virtual void BeginPlay() override;
+
+	void ApplyDamageToCharacter(AOB_Character* Ref) const;
+
+	void ToDestroy() { Destroy(); }
+	
+	//UFUNCTION(BlueprintImplementableEvent)
+	//void UpdateHealthHUD();
 
 public:
-	virtual void Tick(float DeltaTime) override;
+	UFUNCTION(BlueprintCallable)
+	UOB_HealthComp* BPGetHealthComp() const { return HealthComp; }
+	
+	UOB_HealthComp* GetHealthComp() const { return HealthComp; }
 
-	UFUNCTION()
-	UOB_HealthComp* GetHealthComp() { return HealthComp; }
-
+	UFUNCTION(BlueprintCallable)
+	BaseStates BPCurrentState() const { return CurrentState; }
+	
 	BaseStates GetCurrentState() const { return CurrentState; }
 
 	UPROPERTY(VisibleAnywhere, BlueprintAssignable)

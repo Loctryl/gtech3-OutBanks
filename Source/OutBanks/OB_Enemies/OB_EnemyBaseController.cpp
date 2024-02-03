@@ -3,25 +3,12 @@
 #include "OutBanks/OB_Enemies/OB_EnemyBase.h"
 
 
-AOB_EnemyBaseController::AOB_EnemyBaseController()
-{
-	PrimaryActorTick.bCanEverTick = true;
-	
-}
-
-void AOB_EnemyBaseController::BeginPlay()
-{
-	Super::BeginPlay();
-}
-
 void AOB_EnemyBaseController::Tick(float DeltaTime) 
 { 
 	Super::Tick(DeltaTime);
 
 	if(PlayerToChase && Chasing)
-	{
 		MoveToActor(PlayerToChase, 1);
-	}
 }
 
 void AOB_EnemyBaseController::OnPawnStateChange(BaseStates NewState, AOB_Character* Player)

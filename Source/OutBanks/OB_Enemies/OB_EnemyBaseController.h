@@ -16,12 +16,7 @@ class OUTBANKS_API AOB_EnemyBaseController : public AAIController
 
 	bool Chasing = false;
 
-public:
-	AOB_EnemyBaseController();
-
 protected:
-	virtual void BeginPlay() override;
-
 	UFUNCTION(BlueprintCallable)
 	void OnPawnStateChange(BaseStates NewState, AOB_Character* Player);
 
@@ -29,5 +24,4 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	virtual void OnPossess(APawn* InPawn) override;
-	
 };

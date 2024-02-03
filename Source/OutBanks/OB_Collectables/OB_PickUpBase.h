@@ -20,11 +20,5 @@ class OUTBANKS_API AOB_PickUpBase : public AActor
 public:
 	AOB_PickUpBase();
 
-protected:
-	virtual void BeginPlay() override;
-
-public:
-	virtual void Tick(float DeltaTime) override;
-
 	FOnPickUp OnPickUpEvent;
 };

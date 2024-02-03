@@ -34,8 +34,7 @@ class OUTBANKS_API AOB_Tile : public AActor
 
 	UPROPERTY(EditAnywhere, Category=Mesh)
 	class UArrowComponent* AttachPoint;
-
-
+	
 	TArray<AOB_EnemyBase*> Enemies;
 
 
@@ -43,6 +42,21 @@ public:
 	AOB_Tile();
 
 protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int ObstaclesOnTile = 2;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int PickUpOnTile = 2;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int EnemiesOnTile = 2;
+
+	UPROPERTY(EditAnywhere)
+	TMap<TSubclassOf<AActor>, float>ObstacleClasses;
+	UPROPERTY(EditAnywhere)
+	TMap<TSubclassOf<AActor>, float>PickUpClasses;
+	UPROPERTY(EditAnywhere)
+	TMap<TSubclassOf<AActor>, float>EnemiesClasses;
+
+	
 	virtual void BeginPlay() override;
 
 	UFUNCTION()
@@ -60,27 +74,12 @@ protected:
 
 	TSubclassOf<AActor> GetClassInMapWithRate(TMap<TSubclassOf<AActor>, float> Map);
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int ObstaclesOnTile = 2;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int PickUpOnTile = 2;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int EnemiesOnTile = 2;
-
-	UPROPERTY(EditAnywhere)
-	TMap<TSubclassOf<AActor>, float>ObstacleClasses;
-	
-	UPROPERTY(EditAnywhere)
-	TMap<TSubclassOf<AActor>, float>PickUpClasses;
-
-	UPROPERTY(EditAnywhere)
-	TMap<TSubclassOf<AActor>, float>EnemiesClasses;
 
 public:
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION()
-	FVector GetAttachPoint() { return AttachPoint->GetComponentLocation(); }
+	FVector GetAttachPoint() const { return AttachPoint->GetComponentLocation(); }
 
 	TArray<AOB_EnemyBase*> GetAllEnemies() { return Enemies; }
 

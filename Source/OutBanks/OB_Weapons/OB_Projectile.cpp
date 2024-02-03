@@ -1,10 +1,8 @@
 #include "OB_Projectile.h"
-
 #include <Components/CapsuleComponent.h>
 #include <Kismet/GameplayStatics.h>
-#include <OutBanks/OB_Enemies/OB_EnemyBase.h>
 #include <OutBanks/OB_Components/OB_HealthComp.h>
-
+#include <OutBanks/OB_Enemies/OB_EnemyBase.h>
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 
@@ -34,7 +32,7 @@ void AOB_Projectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPr
 {
 	if ((OtherActor != nullptr) && (OtherActor != this) && Cast<UCapsuleComponent>(OtherComp))
 	{
-		AOB_EnemyBase* Enemy = Cast<AOB_EnemyBase>(OtherActor);
+		const AOB_EnemyBase* Enemy = Cast<AOB_EnemyBase>(OtherActor);
 		
 		if(Enemy)
 		{
@@ -48,11 +46,4 @@ void AOB_Projectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPr
 		}
 	}
 	Destroy();
-}
-
-void AOB_Projectile::EndPlay(const EEndPlayReason::Type EndPlayReason)
-{
-	Super::EndPlay(EndPlayReason);
-
-	GetWorldTimerManager().ClearAllTimersForObject(this);
 }

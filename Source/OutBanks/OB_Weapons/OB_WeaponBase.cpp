@@ -44,9 +44,9 @@ void AOB_WeaponBase::Fire()
 	if (ProjectileClass != nullptr)
 	{
 		UWorld* const World = GetWorld();
-		if (World != nullptr && CharacterRef->GetAmmoComponent()->ShootOneAmmo())
+		if (World != nullptr && CharacterRef->GetAmmoComp()->ShootOneAmmo())
 		{
-			APlayerController* PlayerController = Cast<APlayerController>(CharacterRef->GetController());
+			const APlayerController* PlayerController = Cast<APlayerController>(CharacterRef->GetController());
 			const FRotator SpawnRotation = PlayerController->PlayerCameraManager->GetCameraRotation();
 			const FVector SpawnLocation = GetActorLocation() + SpawnRotation.RotateVector(FireSpawnOffset);
 	
@@ -64,22 +64,12 @@ void AOB_WeaponBase::Fire()
 void AOB_WeaponBase::PlayAnimationAndSound()
 {
 	if (FireSound != nullptr)
-	{
 		UGameplayStatics::PlaySoundAtLocation(this, FireSound, CharacterRef->GetActorLocation());
-	}
 	
 	if (FireAnimation != nullptr)
 	{
 		UAnimInstance* AnimInstance = CharacterRef->GetMesh()->GetAnimInstance();
 		if (AnimInstance != nullptr)
-		{
 			AnimInstance->Montage_Play(FireAnimation, 1.f);
-		}
 	}
-}
-
-void AOB_WeaponBase::EndPlay(const EEndPlayReason::Type EndPlayReason)
-{
-	Super::EndPlay(EndPlayReason);
-	GetWorldTimerManager().ClearAllTimersForObject(this);
 }

@@ -1,9 +1,7 @@
 ﻿#include "OutBanks/OB_Enemies/OB_EnemyBase.h"
-
 #include <Components/CapsuleComponent.h>
 #include <Components/SphereComponent.h>
 #include <OutBanks/OB_Character/OB_Character.h>
-
 #include "OutBanks/OB_Components/OB_HealthComp.h"
 
 
@@ -23,6 +21,7 @@ AOB_EnemyBase::AOB_EnemyBase()
 	CurrentState = IDLE;
 }
 
+
 void AOB_EnemyBase::BeginPlay()
 {
 	Super::BeginPlay();
@@ -33,11 +32,9 @@ void AOB_EnemyBase::BeginPlay()
 	TriggerAttackSphere->OnComponentBeginOverlap.AddDynamic(this, &AOB_EnemyBase::OnTriggerAttack);
 	TriggerAttackSphere->OnComponentEndOverlap.AddDynamic(this, &AOB_EnemyBase::OnEndTriggerAttack);
 
-	HealthComp->UpdateHealthEvent.AddDynamic(this, &AOB_EnemyBase::UpdateHealthHUD);
+	//HealthComp->UpdateHealthEvent.AddDynamic(this, &AOB_EnemyBase::UpdateHealthHUD);
 	HealthComp->DeathEvent.AddDynamic(this, &AOB_EnemyBase::Die);
 }
-
-void AOB_EnemyBase::Tick(float DeltaTime) { Super::Tick(DeltaTime); }
 
 
 void AOB_EnemyBase::Die()
@@ -45,6 +42,7 @@ void AOB_EnemyBase::Die()
 	OnDeath.Broadcast();
 	Destroy();
 }
+
 
 void AOB_EnemyBase::OnTriggerChase(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
@@ -56,6 +54,7 @@ void AOB_EnemyBase::OnTriggerChase(UPrimitiveComponent* OverlappedComponent, AAc
 		OnStateChange.Broadcast(CurrentState, CharacterRef);
 	}
 }
+
 
 void AOB_EnemyBase::OnEndTriggerChase(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
@@ -71,6 +70,7 @@ void AOB_EnemyBase::OnEndTriggerChase(UPrimitiveComponent* OverlappedComponent, 
 	}
 }
 
+
 void AOB_EnemyBase::OnTriggerAttack(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	AOB_Character* CharacterRef = Cast<AOB_Character>(OtherActor);
@@ -82,10 +82,11 @@ void AOB_EnemyBase::OnTriggerAttack(UPrimitiveComponent* OverlappedComponent, AA
 
 		CharacterRef->GetHealthComp()->ApplyDamage(DamageDone);
 
-		FTimerDelegate TimerDelegate = FTimerDelegate::CreateUObject(this, &AOB_EnemyBase::ApplyDamageToCharacter, CharacterRef);
+		const FTimerDelegate TimerDelegate = FTimerDelegate::CreateUObject(this, &AOB_EnemyBase::ApplyDamageToCharacter, CharacterRef);
 		GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, AttackSpeed, true);
 	}
 }
+
 
 void AOB_EnemyBase::OnEndTriggerAttack(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
@@ -100,14 +101,4 @@ void AOB_EnemyBase::OnEndTriggerAttack(UPrimitiveComponent* OverlappedComponent,
 	}
 }
 
-void AOB_EnemyBase::ApplyDamageToCharacter(AOB_Character* Ref)
-{
-	Ref->GetHealthComp()->ApplyDamage(DamageDone);
-}
-
-
-void AOB_EnemyBase::EndPlay(const EEndPlayReason::Type EndPlayReason)
-{
-	Super::EndPlay(EndPlayReason);
-	GetWorldTimerManager().ClearAllTimersForObject(this);
-}
+void AOB_EnemyBase::ApplyDamageToCharacter(AOB_Character* Ref) const { Ref->GetHealthComp()->ApplyDamage(DamageDone); }

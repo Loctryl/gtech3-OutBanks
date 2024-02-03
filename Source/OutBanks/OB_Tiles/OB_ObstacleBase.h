@@ -13,15 +13,12 @@ class OUTBANKS_API AOB_ObstacleBase : public AActor
 	UPROPERTY(EditAnywhere)
 	USceneComponent* SceneRootComp;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Mesh, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintGetter=BPGetMeshComp, Category=Mesh)
 	UStaticMeshComponent* MeshComp;
 
 public:
 	AOB_ObstacleBase();
 
-protected:
-	virtual void BeginPlay() override;
-
-public:
-	virtual void Tick(float DeltaTime) override;
+	UFUNCTION(BlueprintPure)
+	UStaticMeshComponent* BPGetMeshComp() const { return MeshComp;}
 };

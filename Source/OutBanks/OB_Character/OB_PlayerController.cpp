@@ -1,11 +1,8 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
-
 #include "OB_PlayerController.h"
 #include <EnhancedInputComponent.h>
 #include <Kismet/GameplayStatics.h>
 #include <OutBanks/OB_Components/OB_AmmoComp.h>
 #include <OutBanks/OB_Weapons/OB_WeaponBase.h>
-
 #include "EnhancedInputSubsystems.h"
 #include "OB_Character.h"
 
@@ -14,19 +11,16 @@ void AOB_PlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// get the enhanced input subsystem
 	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
 	{
-		// add the mapping context so we get controls
 		Subsystem->AddMappingContext(InputMappingContext, 0);
-
-		UE_LOG(LogTemp, Warning, TEXT("BeginPlay"));
 	}
 
 	CharacterRef = Cast<AOB_Character>(UGameplayStatics::GetPlayerCharacter(GetWorld(),0));
 	CharacterForward = CharacterRef->GetActorForwardVector();
 	CharacterRight = CharacterRef->GetActorRightVector();
 }
+
 
 void AOB_PlayerController::SetupInputComponent()
 {
@@ -46,6 +40,7 @@ void AOB_PlayerController::SetupInputComponent()
 	}
 }
 
+
 void AOB_PlayerController::SetUpWeaponInputs()
 {
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(InputComponent))
@@ -53,36 +48,30 @@ void AOB_PlayerController::SetUpWeaponInputs()
 		// Fire
 		EnhancedInputComponent->BindAction(ShootAction, ETriggerEvent::Triggered, CharacterRef->GetWeapon(), &AOB_WeaponBase::Fire);
 		// Reload
-		EnhancedInputComponent->BindAction(ReloadAction, ETriggerEvent::Triggered, CharacterRef->GetAmmoComponent(), &UOB_AmmoComp::Reload);
+		EnhancedInputComponent->BindAction(ReloadAction, ETriggerEvent::Triggered, CharacterRef->GetAmmoComp(), &UOB_AmmoComp::Reload);
 	}
 }
 
 
-void AOB_PlayerController::Tick(float DeltaSeconds)
-{
-	CharacterRef->AddMovementInput(CharacterForward);
-}
+void AOB_PlayerController::Tick(float DeltaSeconds) { CharacterRef->AddMovementInput(CharacterForward); }
 
 
 void AOB_PlayerController::Move(const FInputActionValue& Value)
 {
-	// input is a Vector2D
 	const FVector2D MovementVector = Value.Get<FVector2D>();
 
 	if (CharacterRef->GetController() != nullptr)
-	{
-		// add movement 
 		CharacterRef->AddMovementInput(CharacterRight, MovementVector.X);
-	}
 }
+
 
 void AOB_PlayerController::Look(const FInputActionValue& Value)
 {
-	// input is a Vector2D
-	FVector2D LookAxisVector = Value.Get<FVector2D>();
+	const FVector2D LookAxisVector = Value.Get<FVector2D>();
 
 	if (CharacterRef->GetController() != nullptr)
 	{
+		// Here we want to clamp the rotation camera so the player can't look behind him
 		FRotator Rotator = GetControlRotation();
 		Rotator.Yaw = FMath::ClampAngle(Rotator.Yaw + LookAxisVector.X * SensibilityX, -ClampAngleX, ClampAngleX);
 		Rotator.Pitch = FMath::ClampAngle(Rotator.Pitch + LookAxisVector.Y * SensibilityY, -ClampAngleY, ClampAngleY);
@@ -91,12 +80,14 @@ void AOB_PlayerController::Look(const FInputActionValue& Value)
 	}
 }
 
+
 void AOB_PlayerController::Jump(const FInputActionValue& Value)
 {
 	if (CharacterRef->GetController() != nullptr)
 		CharacterRef->Jump();
 	
 }
+
 
 void AOB_PlayerController::StopJump(const FInputActionValue& Value)
 {
